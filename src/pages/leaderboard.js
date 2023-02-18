@@ -4,18 +4,18 @@ import useFetch from '../hooks/useFetch';
 import LeaderboardCards from '../components/leaderboardCard/leaderboardCards';
 
 import LoadingAnimation from '../components/loadingAnimation/loadingAnimation';
+import { socket } from '../websocket';
 
 export default function Leaderboard() {
     const [teams, setTeams] = useState(null);
     const { apiPostGetJsonAsTeam } = useFetch();
 
     useEffect(() => {
-        const fetchTeams = async () => {
-            const data = await apiPostGetJsonAsTeam('/rt22/teams');
+        socket.on("update-score", (data) => {
+            data = JSON.parse(data);
             setTeams(data.teams);
-            console.log(teams);
-        };
-        fetchTeams();
+            console.log(data);
+        })
     }, []);
 
     return (
